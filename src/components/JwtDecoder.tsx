@@ -2,7 +2,8 @@ import { useState, useCallback } from "react";
 import { Copy, Check, KeyRound, FileCode, ShieldCheck } from "lucide-react";
 import AdPlaceholder from "./AdPlaceholder";
 
-const SAMPLE_JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+const SAMPLE_JWT =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
 
 function decodeBase64Url(str: string): string {
   const padded = str.replace(/-/g, "+").replace(/_/g, "/");
@@ -11,7 +12,7 @@ function decodeBase64Url(str: string): string {
       atob(padded)
         .split("")
         .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
-        .join("")
+        .join(""),
     );
   } catch {
     return atob(padded);
@@ -47,9 +48,24 @@ function decodeJwt(token: string): DecodedParts | null {
 }
 
 const sectionConfig = [
-  { key: "header" as const, label: "Header", icon: FileCode, accent: "primary" },
-  { key: "payload" as const, label: "Payload", icon: KeyRound, accent: "accent" },
-  { key: "signature" as const, label: "Signature", icon: ShieldCheck, accent: "success" },
+  {
+    key: "header" as const,
+    label: "Header",
+    icon: FileCode,
+    accent: "primary",
+  },
+  {
+    key: "payload" as const,
+    label: "Payload",
+    icon: KeyRound,
+    accent: "accent",
+  },
+  {
+    key: "signature" as const,
+    label: "Signature",
+    icon: ShieldCheck,
+    accent: "success",
+  },
 ];
 
 const CopyButton = ({ text }: { text: string }) => {
@@ -60,8 +76,16 @@ const CopyButton = ({ text }: { text: string }) => {
     setTimeout(() => setCopied(false), 1500);
   };
   return (
-    <button onClick={copy} className="p-1.5 rounded-md hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" aria-label="Copy">
-      {copied ? <Check className="h-3.5 w-3.5 text-success" /> : <Copy className="h-3.5 w-3.5" />}
+    <button
+      onClick={copy}
+      className="p-1.5 rounded-md hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground"
+      aria-label="Copy"
+    >
+      {copied ? (
+        <Check className="h-3.5 w-3.5 text-success" />
+      ) : (
+        <Copy className="h-3.5 w-3.5" />
+      )}
     </button>
   );
 };
@@ -80,8 +104,13 @@ const JwtDecoder = () => {
           {/* Left: Input */}
           <div className="flex-1 flex flex-col rounded-xl border bg-card shadow-sm overflow-hidden">
             <div className="flex items-center justify-between px-4 py-2.5 border-b bg-toolbar/50">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Encoded Token</span>
-              <button onClick={handleLoadSample} className="text-xs text-muted-foreground hover:text-primary transition-colors underline-offset-2 hover:underline">
+              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Encoded Token
+              </span>
+              <button
+                onClick={handleLoadSample}
+                className="text-xs text-muted-foreground hover:text-primary transition-colors underline-offset-2 hover:underline"
+              >
                 Load sample
               </button>
             </div>
@@ -114,17 +143,26 @@ const JwtDecoder = () => {
                 success: "bg-success/10 text-success",
               };
               return (
-                <div key={key} className={`flex-1 flex flex-col rounded-xl border shadow-sm overflow-hidden ${accentClasses[accent]}`}>
+                <div
+                  key={key}
+                  className={`flex-1 flex flex-col rounded-xl border shadow-sm overflow-hidden ${accentClasses[accent]}`}
+                >
                   <div className="flex items-center justify-between px-4 py-2 border-b border-inherit">
                     <div className="flex items-center gap-2">
-                      <span className={`inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md ${badgeClasses[accent]}`}>
+                      <span
+                        className={`inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md ${badgeClasses[accent]}`}
+                      >
                         <Icon className="h-3 w-3" /> {label}
                       </span>
                     </div>
                     {content && <CopyButton text={content} />}
                   </div>
-                  <pre className="flex-1 p-3 text-xs font-mono text-card-foreground overflow-auto whitespace-pre-wrap min-h-[60px]">
-                    {content || <span className="text-muted-foreground/40 italic">Decoded {label.toLowerCase()} will appear here...</span>}
+                  <pre className="flex-1 p-3 text-xs font-mono text-card-foreground overflow-auto whitespace-pre-wrap min-h-[60px] break-all">
+                    {content || (
+                      <span className="text-muted-foreground/40 italic">
+                        Decoded {label.toLowerCase()} will appear here...
+                      </span>
+                    )}
                   </pre>
                 </div>
               );
